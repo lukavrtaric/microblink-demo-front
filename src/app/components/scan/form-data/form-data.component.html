@@ -1,0 +1,47 @@
+<form [formGroup]="scanDataForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+        <input matInput type="text" formControlName="type" placeholder="Recognizer Type" required>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput type="text" formControlName="secondaryID" placeholder="First Name" required>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput type="text" formControlName="primaryID" placeholder="Last Name" required>
+    </mat-form-field>
+    
+    <mat-form-field>
+        <input matInput type="text" formControlName="documentType" placeholder="Document Type" required>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput type="text" formControlName="documentNumber" placeholder="Document Number" required>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput type="text" formControlName="sex" placeholder="Gender">
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput type="text" formControlName="nationality" placeholder="Nationality">
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput [matDatepicker]="dateOfBirth" placeholder="Date Of Birth" formControlName="dateOfBirth">
+        <mat-datepicker-toggle matSuffix [for]="dateOfBirth"></mat-datepicker-toggle>
+        <mat-datepicker #dateOfBirth></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput [matDatepicker]="dateOfExpiry" placeholder="Date Of Expiry" formControlName="dateOfExpiry">
+        <mat-datepicker-toggle matSuffix [for]="dateOfExpiry"></mat-datepicker-toggle>
+        <mat-datepicker #dateOfExpiry></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+        <textarea matInput type="text" formControlName="rawMRZString" placeholder="Raw MRZ String" required></textarea>
+    </mat-form-field>
+
+    <button mat-stroked-button color="primary" type="submit" [disabled]="!scanDataForm.valid">Submit</button>
+</form>

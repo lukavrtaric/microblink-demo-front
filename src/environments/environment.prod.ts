@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  backendAPIUrl: 'https://microblink-demo.herokuapp.com/'
 };
