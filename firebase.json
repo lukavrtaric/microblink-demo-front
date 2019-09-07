@@ -7,7 +7,7 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "public": "public",
+    "public": "dist/microblink-demo-front",
     "ignore": [
       "firebase.json",
       "**/.*",
