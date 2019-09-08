@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 import MRTD from '../models/MRTD';
 
@@ -8,31 +8,54 @@ import MRTD from '../models/MRTD';
   providedIn: 'root'
 })
 export class FirebaseService {
-  baseUri = "";
 
-  constructor(private http: HttpClient) { }
+  constructor(private firestore: AngularFirestore, private firestorage: AngularFireStorage) { }
 
-  create = (scan: MRTD): Observable<MRTD> => {
-    return this
-      .http
-      .post<MRTD>(`${this.baseUri}/create`, scan);
+  createScanData = (data: MRTD) => {
+    return new Promise<any>((resolve, reject) =>{
+      this.firestore
+        .collection("scans")
+        .doc(data._id.toString())
+        .set(data)
+        .then(res => resolve(res), err => reject(err));
+    });
   }
 
-  getAll = (): Observable<MRTD[]> => {
-    return this
-      .http
-      .get<MRTD[]>(`${this.baseUri}`);
+  createImageData = (id: any, data: any) => {
+    return new Promise<any>((resolve, reject) => {
+      let storageRef = this.firestorage.storage.ref('/images').child(id);
+      storageRef
+        .putString(data, 'base64', {contentType:'image/jpg'})
+        .then(res => resolve(res), err => reject(err));
+    });
   }
 
-  get = (id: string): Observable<MRTD> => {
-    return this
-      .http
-      .get<MRTD>(`${this.baseUri}/details/${id}`);
+  getImageData = (id: any) => {
+    return new Promise<any>((resolve, reject) => {
+      let storageRef = this.firestorage.storage.ref('/images').child(id);
+      storageRef
+        .getDownloadURL()
+        .then(url => resolve(url), err => reject(err));
+    })
   }
 
-  delete = (id: string): Observable<MRTD> => {
-    return this
-      .http
-      .get<MRTD>(`${this.baseUri}/delete/${id}`);
+  deleteScanData = (id: string) => {
+    return new Promise<any>((resolve, reject) => {
+      this.firestore
+        .collection("scans")
+        .doc(id)
+        .delete()
+        .then(res => resolve(res), err => reject(err));
+    });
+  }
+
+  deleteImageData = (id: string) => {
+    return new Promise<any>((resolve, reject) => {
+      let storageRef = this.firestorage.storage.ref('/images').child(id);
+      storageRef
+        .delete()
+        .then(res => resolve(res), err => reject(err));
+
+    });
   }
 }

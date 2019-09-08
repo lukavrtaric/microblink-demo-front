@@ -11,7 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ScanService } from './../../../services/scan.service';
 import { FirebaseService } from './../../../services/firebase.service'; 
 import MRTD from './../../../models/MRTD';
-import { DialogComponent } from './../../shared/dialog/dialog.component';
+import { DialogScanCreatedComponent } from './../../shared/dialog/dialog-scan-created/dialog-scan-created.component';
 
 @Component({
   selector: 'app-form-data',
@@ -77,21 +77,53 @@ export class FormDataComponent implements OnInit {
 
   onSubmit() {
     // Store data to MongoDB
-    this.ss.create(this.scanDataForm.value).subscribe((user: MRTD) => {
-      if (user) {
-        const dialogRef = this.dialog.open(DialogComponent);
-    
-        dialogRef.afterClosed().subscribe(result => {
+    let mongoSubscription = this.ss.create(this.scanDataForm.value).subscribe((scan: MRTD) => {
+      if (scan) {
+        let statuses = { firestore:{}, firestorage:{} };
+        
+        // Store data to Firebase firestore
+        this.fbs.createScanData(scan)
+          .then((res) => {
+            statuses.firestore = {
+              status: "OK",
+              message: "Saved to FireStore"
+            }
+          })
+          .catch(err => {
+            statuses.firestore = {
+              status: "ERROR",
+              message: "Error occured during saving to FireStore"
+            }
+          });
+
+        // Store image to Firebase firestorage
+        this.fbs.createImageData(scan._id, this.scanData.fullDocumentImageBase64)
+          .then(res => {
+            statuses.firestorage = {
+              status: "OK",
+              message: "Saved to FireStorage"
+            }
+          })
+          .catch(err => {
+            statuses.firestorage = {
+              status: "ERROR",
+              message: "Error occured during saving to FireStorage"
+            }
+          });
+        
+        const dialogRef = this.dialog.open(DialogScanCreatedComponent, {
+          data: statuses
+        });
+
+        dialogRef.afterClosed().subscribe(() => {
           this.scanDataForm.reset();
+          mongoSubscription.unsubscribe();
         });
       } else {
-        alert("E jebiga, neš je puklo otraga!");
+        // Store to Mongo DB failed, unsubscribe
+        mongoSubscription.unsubscribe();
       }
     });
-    // Store data to Firebase firestore
-    //this.fbs.create(this.scanDataForm.value);
-    // Store image data to Firebase firestorage
-    //this.fbs.sendImage(this.scanData.fullDocumentImageBase64);
   }
 
   ngOnInit() {}

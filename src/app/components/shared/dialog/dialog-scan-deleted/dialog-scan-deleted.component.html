@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Scan is about to delete</h1>
+<div mat-dialog-content>
+  <p class="mat-body-1">
+    <mat-checkbox [(ngModel)]="firestore">Delete from FireStore</mat-checkbox>  
+  </p>
+  <p class="mat-body-1">
+    <mat-checkbox [(ngModel)]="firestorage">Delete from FireStorage</mat-checkbox>
+  </p>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="deleteScan(data)">Delete</button>
+</div>

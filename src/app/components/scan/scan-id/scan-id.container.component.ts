@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { environment } from './../../../../environments/environment';
 import MRTD from "./../../../models/MRTD";
+import { Observable } from 'rxjs';
 
 // There is no exposed Microblink SDK module inside microblink NPM package, at least I couldn't find one
 // CDN import used instead

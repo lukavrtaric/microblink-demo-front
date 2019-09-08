@@ -9,6 +9,7 @@ import { ScanIdContainerComponent } from './../components/scan/scan-id/scan-id.c
 import { ScanIdComponent } from './../components/scan/scan-id/scan-id.component';
 import { FormDataComponent } from './../components/scan/form-data/form-data.component';
 
+
 @NgModule({
     imports: [
       ScanRoutingModule,

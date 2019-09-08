@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ScanService } from './../../services/scan.service';
+import { FirebaseService } from './../../services/firebase.service'; 
 import MRTD from './../../models/MRTD';
 import { trigger, state, transition, style, animate } from '@angular/animations';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogScanDeletedComponent } from './../shared/dialog/dialog-scan-deleted/dialog-scan-deleted.component';
 
 @Component({
   selector: 'app-scan-collection',
@@ -30,10 +33,35 @@ export class ScanCollectionComponent implements OnInit {
   };
   expandedElement: MRTD | null;
 
-  constructor(private ss: ScanService) {}
+  constructor(
+    private ss: ScanService, 
+    private fbs: FirebaseService,
+    public dialog: MatDialog
+  ) {}
 
   getAll = () => {
-    this.dataSource = this.ss.getAll();
+    let that = this;
+    this.ss.getAll().subscribe((result) => {
+      result.forEach(function(scan) {
+        that.fbs
+          .getImageData(scan._id)
+          .then(image => {
+            scan.fullDocumentImageBase64 = image;
+          });
+      });
+
+      this.dataSource = result;
+    });
+  }
+
+  delete = (id: string) => {
+    const dialogRef = this.dialog.open(DialogScanDeletedComponent, {
+      data: id
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.getAll();
+    });
   }
 
   ngOnInit() {

@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Saving data</h1>
+<div mat-dialog-content>
+  <p class="mat-body-1">
+    Scan data successfully saved to Mongo. What about Firebase?
+  </p>
+  <p class="mat-body-1">
+    FireStore upload form: {{data.firestore.status}} - {{data.firestore.message}} <br>
+    FireStorage upload image: {{data.firestorage.status}} - {{data.firestorage.message}}
+  </p>
+</div>
+<div mat-dialog-footer>
+  <p class="mat-body-1">What to do next?</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Scan again</button>
+  <button mat-button (click)="goToCollection()">View collection</button>
+</div>

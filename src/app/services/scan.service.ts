@@ -25,15 +25,9 @@ export class ScanService {
       .get<MRTD[]>(`${this.baseUri}`);
   }
 
-  get = (id: string): Observable<MRTD> => {
+  delete = (id: string): Observable<any> => {
     return this
       .http
-      .get<MRTD>(`${this.baseUri}/details/${id}`);
-  }
-
-  delete = (id: string): Observable<MRTD> => {
-    return this
-      .http
-      .get<MRTD>(`${this.baseUri}/delete/${id}`);
+      .get<any>(`${this.baseUri}/delete/${id}`);
   }
 }

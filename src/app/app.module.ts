@@ -11,7 +11,13 @@ import { CompleteMaterialModule } from './material-module';
 import { HomeComponent } from './components/default/home/home.component';
 import { NotFoundComponent } from './components/default/not-found/not-found.component';
 import { ScanCollectionComponent } from './components/scan-collection/scan-collection.component';
-import { DialogComponent } from './components/shared/dialog/dialog.component';
+import { DialogScanCreatedComponent } from './components/shared/dialog/dialog-scan-created/dialog-scan-created.component';
+import { DialogScanDeletedComponent } from './components/shared/dialog/dialog-scan-deleted/dialog-scan-deleted.component';
+import { AngularFireModule } from "@angular/fire";
+import { AngularFirestoreModule } from "@angular/fire/firestore";
+import { AngularFireStorageModule } from '@angular/fire/storage';
+
+import { environment } from "./../environments/environment";
 
 @NgModule({
   declarations: [
@@ -19,7 +25,8 @@ import { DialogComponent } from './components/shared/dialog/dialog.component';
     HomeComponent,
     NotFoundComponent,
     ScanCollectionComponent,
-    DialogComponent
+    DialogScanCreatedComponent,
+    DialogScanDeletedComponent
   ],
   imports: [
     BrowserModule,
@@ -28,10 +35,14 @@ import { DialogComponent } from './components/shared/dialog/dialog.component';
     FormsModule,
     HttpClientModule,
     CompleteMaterialModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule,
+    AngularFireStorageModule
   ],
   entryComponents: [
-    DialogComponent
+    DialogScanCreatedComponent,
+    DialogScanDeletedComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
