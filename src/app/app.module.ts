@@ -18,6 +18,7 @@ import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
 import { environment } from "./../environments/environment";
+import { SpinnerComponent } from './components/shared/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { environment } from "./../environments/environment";
     NotFoundComponent,
     ScanCollectionComponent,
     DialogScanCreatedComponent,
-    DialogScanDeletedComponent
+    DialogScanDeletedComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,

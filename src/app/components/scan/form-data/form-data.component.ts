@@ -27,7 +27,8 @@ export class FormDataComponent implements OnInit {
     private fbs: FirebaseService, 
     public dialog: MatDialog
   ) {}
-
+  
+  // Build form and set validation config
   scanDataForm = new FormGroup({
     type: new FormControl('', Validators.required),
     secondaryID: new FormControl('', Validators.required),
@@ -41,6 +42,8 @@ export class FormDataComponent implements OnInit {
     rawMRZString: new FormControl('', Validators.required)
   });
 
+  // Set and transform date from recieved OCR values
+  // We need standard date object to disply it on mat datepicker component
   createDate = (date: any) => {
     let year: string, month: string, day: string;
 
@@ -52,6 +55,7 @@ export class FormDataComponent implements OnInit {
     return new Date(dateString);
   }
 
+  // Fill form with OCR data received from Microblink
   fllForm = (data: MRTD) => {
     // Not all scanned values were inserted in form, just these...
     this.scanDataForm.setValue({
@@ -76,45 +80,47 @@ export class FormDataComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.scanDataForm.value);
     // Store data to MongoDB
     let mongoSubscription = this.ss.create(this.scanDataForm.value).subscribe((scan: MRTD) => {
       if (scan) {
-        let statuses = { firestore:{}, firestorage:{} };
+        // Show status for each firebase service
+        let statuses = { 
+          firestore: {
+            success: null,
+            loading: true
+          }, 
+          firestorage: {
+            success: null,
+            loading:true
+          }
+        };
         
         // Store data to Firebase firestore
         this.fbs.createScanData(scan)
-          .then((res) => {
-            statuses.firestore = {
-              status: "OK",
-              message: "Saved to FireStore"
-            }
+          .then((res) => { 
+            statuses.firestore.success = true; 
+            statuses.firestore.loading = false; 
           })
-          .catch(err => {
-            statuses.firestore = {
-              status: "ERROR",
-              message: "Error occured during saving to FireStore"
-            }
+          .catch(err => { 
+            statuses.firestore.success = false;
+            statuses.firestore.loading = false; 
           });
 
         // Store image to Firebase firestorage
         this.fbs.createImageData(scan._id, this.scanData.fullDocumentImageBase64)
-          .then(res => {
-            statuses.firestorage = {
-              status: "OK",
-              message: "Saved to FireStorage"
-            }
+          .then((res) => { 
+            statuses.firestorage.success = true; 
+            statuses.firestorage.loading = false; 
           })
-          .catch(err => {
-            statuses.firestorage = {
-              status: "ERROR",
-              message: "Error occured during saving to FireStorage"
-            }
+          .catch(err => { 
+            statuses.firestorage.success = false;
+            statuses.firestorage.loading = false; 
           });
         
-        const dialogRef = this.dialog.open(DialogScanCreatedComponent, {
-          data: statuses
-        });
+        const dialogRef = this.dialog.open(DialogScanCreatedComponent, { data: statuses });
 
+        // Process is finished, reset form and unsubscribe
         dialogRef.afterClosed().subscribe(() => {
           this.scanDataForm.reset();
           mongoSubscription.unsubscribe();

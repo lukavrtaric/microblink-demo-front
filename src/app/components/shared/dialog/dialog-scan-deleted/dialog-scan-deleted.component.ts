@@ -12,7 +12,11 @@ export class DialogScanDeletedComponent implements OnInit {
 
   firestore = false;
   firestorage = false;
-  statusMessage = "";
+  statusMessage = null;
+  firestoreLoading = false;
+  firestorageLoading = false;
+  firestoreSuccess = false;
+  firestorageSuccess = false
 
   constructor(
     private dialogRef: MatDialogRef<DialogScanDeletedComponent>,
@@ -20,22 +24,51 @@ export class DialogScanDeletedComponent implements OnInit {
     private fbs: FirebaseService,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
-  close = () => {
-    this.dialogRef.close();
+  close = (event) => {
+    this.dialogRef.close(event);
   }
 
   deleteScan = (id: string) => {
     this.ss.delete(id).subscribe((res) => {
       if (res.status) {
         if (this.firestore) {
-          this.fbs.deleteScanData(res.data._id);
+          this.firestoreLoading = true;
+          this.fbs.deleteScanData(res.data._id)
+            .then(res => {
+              this.firestoreLoading = false;
+              this.firestoreSuccess = true;
+              if (!this.firestorage) {
+                setTimeout(() => {
+                  this.close('deleted')
+                }, 1000);
+              }
+            })
+            .catch(err => {
+              console.error(err);
+            });
         }
   
         if (this.firestorage) {
-          this.fbs.deleteImageData(res.data._id);
+          this.firestorageLoading = true;
+          this.fbs.deleteImageData(res.data._id)
+            .then(res => {
+              this.firestorageLoading = false;
+              this.firestorageSuccess = true;
+              setTimeout(() => {
+                this.close('deleted')
+              }, 1000);
+            })
+            .catch(err => {
+              console.error(err);
+            });
         }
 
-        this.close();
+        if (!(this.firestorage && this.firestore))
+        {
+          setTimeout(() => {
+            this.close('deleted')
+          }, 500);
+        }
       } else {
         this.statusMessage = res.status.message;
       }

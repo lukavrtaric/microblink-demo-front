@@ -1,12 +1,33 @@
 <h1 mat-dialog-title>Scan is about to delete</h1>
 <div mat-dialog-content>
   <p class="mat-body-1">
-    <mat-checkbox [(ngModel)]="firestore">Delete from FireStore</mat-checkbox>  
+    <mat-checkbox [(ngModel)]="firestore">Delete from FireStore</mat-checkbox>
+    <span *ngIf="firestoreLoading">
+        <app-spinner></app-spinner>
+    </span>
+    <span *ngIf="firestoreSuccess">
+        <i class="material-icons">done</i>
+    </span>
   </p>
+
   <p class="mat-body-1">
     <mat-checkbox [(ngModel)]="firestorage">Delete from FireStorage</mat-checkbox>
+    <span *ngIf="firestorageLoading">
+        <app-spinner></app-spinner>
+    </span>
+    <span *ngIf="firestorageSuccess">
+        <i class="material-icons">done</i>
+    </span>
   </p>
+
+  <div *ngIf="statusMessage">
+    <p class="mat-body-1">
+      {{statusMessage}}
+    </p>
+  </div>
+</div>
+
 <div mat-dialog-actions>
-  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button (click)="close('close')">Cancel</button>
   <button mat-button (click)="deleteScan(data)">Delete</button>
 </div>

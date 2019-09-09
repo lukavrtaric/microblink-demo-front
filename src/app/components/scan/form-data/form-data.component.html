@@ -1,3 +1,7 @@
+<div class="mat-display-1" style="text-align: center; margin-top: 30px;">
+    Form will be populated after OCR procedure is done. Or you can populate it manually.
+</div>
+
 <form [formGroup]="scanDataForm" (ngSubmit)="onSubmit()">
     <mat-form-field>
         <input matInput type="text" formControlName="type" placeholder="Recognizer Type" required>

@@ -9,8 +9,11 @@ import MRTD from '../models/MRTD';
 })
 export class FirebaseService {
 
-  constructor(private firestore: AngularFirestore, private firestorage: AngularFireStorage) { }
-
+  constructor(
+    private firestore: AngularFirestore, 
+    private firestorage: AngularFireStorage
+  ) {}
+  
   createScanData = (data: MRTD) => {
     return new Promise<any>((resolve, reject) =>{
       this.firestore
@@ -21,7 +24,7 @@ export class FirebaseService {
     });
   }
 
-  createImageData = (id: any, data: any) => {
+  createImageData = (id: string, data: string) => {
     return new Promise<any>((resolve, reject) => {
       let storageRef = this.firestorage.storage.ref('/images').child(id);
       storageRef
@@ -30,7 +33,7 @@ export class FirebaseService {
     });
   }
 
-  getImageData = (id: any) => {
+  getImageData = (id: string) => {
     return new Promise<any>((resolve, reject) => {
       let storageRef = this.firestorage.storage.ref('/images').child(id);
       storageRef
