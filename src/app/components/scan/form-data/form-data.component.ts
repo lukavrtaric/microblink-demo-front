@@ -80,7 +80,6 @@ export class FormDataComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.scanDataForm.value);
     // Store data to MongoDB
     let mongoSubscription = this.ss.create(this.scanDataForm.value).subscribe((scan: MRTD) => {
       if (scan) {
