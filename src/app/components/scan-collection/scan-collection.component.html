@@ -1,56 +1,58 @@
-<table mat-table
-       [dataSource]="dataSource" multiTemplateDataRows
-       class="mat-elevation-z8">
-    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
-        <th mat-header-cell *matHeaderCellDef> {{columnsLabels[column]}} </th>
-        <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="expandedDetail">
-        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
-            <div class="element-detail"
-                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                <div class="element-diagram">
-                    <img src="{{element.fullDocumentImageBase64}}">
+<div class="mat-table-example">
+    <table mat-table
+        [dataSource]="dataSource" multiTemplateDataRows
+        class="mat-elevation-z8">
+        <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+            <th mat-header-cell *matHeaderCellDef> {{columnsLabels[column]}} </th>
+            <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                <div class="element-detail"
+                    [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                    <div class="element-diagram">
+                        <img src="{{element.fullDocumentImageBase64}}">
+                    </div>
+                    <div class="element-description">
+                        <mat-list>
+                            <mat-list-item>
+                                <h3 matLine><b>Nationality</b></h3>
+                                <p matLine>{{element.nationality || "-"}}</p>
+                            </mat-list-item>
+                            <mat-list-item>
+                                <h3 matLine><b>Gender</b></h3>
+                                <p matLine>{{element.sex || "-"}}</p>
+                            </mat-list-item>
+                            <mat-list-item>
+                                <h3 matLine><b>Date Of Birth</b></h3>
+                                <p matLine>{{element.dateOfBirth | date}}</p>
+                            </mat-list-item>
+                            <mat-list-item>
+                                <h3 matLine><b>Date Of Expiry</b></h3>
+                                <p matLine>{{element.dateOfExpiry | date}}</p>
+                            </mat-list-item>
+                            <mat-list-item>
+                                <h3 matLine><b>Raw MRZ</b></h3>
+                                <p matLine>{{element.rawMRZString || "-"}}</p>
+                            </mat-list-item>
+                            <mat-list-item>
+                                <button matLine mat-stroked-button class="delete-user" color="warn" (click)="delete(element._id)">
+                                    Delete Scan
+                                </button>
+                            </mat-list-item>
+                        </mat-list>
+                    </div>
                 </div>
-                <div class="element-description">
-                    <mat-list>
-                        <mat-list-item>
-                            <h3 matLine><b>Nationality</b></h3>
-                            <p matLine>{{element.nationality || "-"}}</p>
-                        </mat-list-item>
-                        <mat-list-item>
-                            <h3 matLine><b>Gender</b></h3>
-                            <p matLine>{{element.sex || "-"}}</p>
-                        </mat-list-item>
-                        <mat-list-item>
-                            <h3 matLine><b>Date Of Birth</b></h3>
-                            <p matLine>{{element.dateOfBirth | date}}</p>
-                        </mat-list-item>
-                        <mat-list-item>
-                            <h3 matLine><b>Date Of Expiry</b></h3>
-                            <p matLine>{{element.dateOfExpiry | date}}</p>
-                        </mat-list-item>
-                        <mat-list-item>
-                            <h3 matLine><b>Raw MRZ</b></h3>
-                            <p matLine>{{element.rawMRZString || "-"}}</p>
-                        </mat-list-item>
-                        <mat-list-item>
-                            <button matLine mat-stroked-button class="delete-user" color="warn" (click)="delete(element._id)">
-                                Delete Scan
-                            </button>
-                        </mat-list-item>
-                    </mat-list>
-                </div>
-            </div>
-        </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-    <tr mat-row *matRowDef="let element; columns: columnsToDisplay;"
-      class="element-row"
-      [class.expanded-row]="expandedElement === element"
-      (click)="expandedElement = expandedElement === element ? null : element">
-    </tr>
-    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
-</table>
+            </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+        <tr mat-row *matRowDef="let element; columns: columnsToDisplay;"
+        class="element-row"
+        [class.expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+    </table>
+</div>
